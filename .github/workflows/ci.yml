@@ -1,0 +1,13 @@
+﻿name: Help-X CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Add lint, test, Docker build, and security scan jobs as services mature."

@@ -1,0 +1,21 @@
+﻿{
+  "name": "@helpx/iot-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "mqtt": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "jest": "latest",
+    "nodemon": "latest"
+  }
+}

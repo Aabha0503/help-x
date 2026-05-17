@@ -1,0 +1,52 @@
+﻿version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: helpx-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: helpx-redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./services/backend
+    container_name: helpx-backend
+    env_file: ./services/backend/.env.example
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - redis
+
+  ai-service:
+    build: ./services/ai-service
+    container_name: helpx-ai-service
+    env_file: ./services/ai-service/.env.example
+    ports:
+      - "8000:8000"
+
+  iot-gateway:
+    build: ./services/iot-gateway
+    container_name: helpx-iot-gateway
+    env_file: ./services/iot-gateway/.env.example
+    ports:
+      - "5001:5001"
+    depends_on:
+      - backend
+
+  notification-service:
+    build: ./services/notification-service
+    container_name: helpx-notification-service
+    env_file: ./services/notification-service/.env.example
+    depends_on:
+      - redis
+
+volumes:
+  mongo-data:

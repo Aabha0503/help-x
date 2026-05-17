@@ -1,0 +1,21 @@
+﻿{
+  "name": "help-x",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-based intelligent emergency response and accident detection system",
+  "workspaces": [
+    "apps/web",
+    "apps/mobile",
+    "services/backend",
+    "services/iot-gateway",
+    "services/notification-service",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @helpx/web",
+    "dev:backend": "npm run dev --workspace @helpx/backend",
+    "dev:iot": "npm run dev --workspace @helpx/iot-gateway",
+    "dev:notifications": "npm run dev --workspace @helpx/notification-service",
+    "test": "npm run test --workspaces --if-present"
+  }
+}

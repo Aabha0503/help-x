@@ -1,0 +1,21 @@
+﻿{
+  "name": "@helpx/notification-service",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon src/worker.js",
+    "start": "node src/worker.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "latest",
+    "dotenv": "latest",
+    "firebase-admin": "latest",
+    "nodemailer": "latest",
+    "redis": "latest"
+  },
+  "devDependencies": {
+    "jest": "latest",
+    "nodemon": "latest"
+  }
+}

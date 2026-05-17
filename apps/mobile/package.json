@@ -1,0 +1,21 @@
+﻿{
+  "name": "@helpx/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "react": "latest",
+    "react-native": "latest",
+    "@react-navigation/native": "latest",
+    "axios": "latest",
+    "socket.io-client": "latest"
+  },
+  "devDependencies": {
+    "eslint": "latest"
+  }
+}
