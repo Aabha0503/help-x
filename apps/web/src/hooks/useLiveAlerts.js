@@ -1,56 +1,37 @@
-import { useEffect, useMemo, useState } from "react";
-import { emergencyAlerts } from "../data/mockData.js";
-
-const simulatedAlerts = [
-  {
-    id: "HX-2049",
-    driver: "Kabir Malhotra",
-    vehicle: "GJ 01 RT 3342",
-    severity: "critical",
-    status: "Countdown active",
-    location: "SG Highway, Ahmedabad",
-    time: "Just now",
-    confidence: 96,
-    sensors: "Impact spike + airbag event"
-  },
-  {
-    id: "HX-2050",
-    driver: "Meera Joshi",
-    vehicle: "TS 08 LL 9218",
-    severity: "high",
-    status: "AI verification",
-    location: "Outer Ring Road, Hyderabad",
-    time: "Just now",
-    confidence: 84,
-    sensors: "Sudden stop + tilt anomaly"
-  }
-];
+import { useEffect, useMemo, useRef, useState } from "react";
+import { fetchAlerts } from "../services/helpXApi";
+import useApiResource from "./useApiResource";
 
 export default function useLiveAlerts() {
-  const [alerts, setAlerts] = useState(emergencyAlerts);
+  const alertsResource = useApiResource(fetchAlerts);
+  const { data, retry } = alertsResource;
+  const previousFirstId = useRef(null);
   const [latestAlert, setLatestAlert] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
+  // Lightweight live behavior: poll the backend periodically.
+  // Later this can be replaced by Socket.IO without changing page components.
   useEffect(() => {
-    const loadingTimer = window.setTimeout(() => setIsLoading(false), 700);
-    return () => window.clearTimeout(loadingTimer);
-  }, []);
-
-  useEffect(() => {
-    let cursor = 0;
     const interval = window.setInterval(() => {
-      const nextAlert = simulatedAlerts[cursor % simulatedAlerts.length];
-      setAlerts((current) => [nextAlert, ...current.filter((alert) => alert.id !== nextAlert.id)].slice(0, 5));
-      setLatestAlert(nextAlert);
-      cursor += 1;
-    }, 9000);
+      retry();
+    }, 10000);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [retry]);
+
+  useEffect(() => {
+    const firstAlert = data[0];
+    if (firstAlert && firstAlert.id !== previousFirstId.current) {
+      previousFirstId.current = firstAlert.id;
+      setLatestAlert(firstAlert);
+    }
+  }, [data]);
 
   const analytics = useMemo(() => {
+    const alerts = data;
     const critical = alerts.filter((alert) => alert.severity === "critical").length;
-    const averageConfidence = Math.round(alerts.reduce((total, alert) => total + alert.confidence, 0) / alerts.length);
+    const averageConfidence = alerts.length
+      ? Math.round(alerts.reduce((total, alert) => total + alert.confidence, 0) / alerts.length)
+      : 0;
 
     return {
       activeEmergencies: alerts.length,
@@ -58,7 +39,15 @@ export default function useLiveAlerts() {
       averageConfidence,
       countdownActive: alerts.some((alert) => alert.status.toLowerCase().includes("countdown"))
     };
-  }, [alerts]);
+  }, [data]);
 
-  return { alerts, latestAlert, analytics, isLoading };
+  return {
+    alerts: data,
+    latestAlert,
+    analytics,
+    isLoading: alertsResource.isLoading,
+    error: alertsResource.error,
+    isEmpty: alertsResource.isEmpty,
+    retry
+  };
 }

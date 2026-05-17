@@ -1,18 +1,21 @@
 import { BatteryCharging, Gauge, RadioTower } from "lucide-react";
+import EmptyState from "../../components/common/EmptyState.jsx";
+import ErrorState from "../../components/common/ErrorState.jsx";
 import LoadingSkeleton from "../../components/common/LoadingSkeleton.jsx";
 import PageHeader from "../../components/common/PageHeader.jsx";
 import StatusBadge from "../../components/common/StatusBadge.jsx";
-import { vehicles } from "../../data/mockData.js";
+import { useVehicles } from "../../hooks/useBackendData";
 
 export default function VehicleMonitoringPage() {
-  const isLoading = false;
+  const { data: vehicles, isLoading, error, isEmpty, retry } = useVehicles();
 
   return (
     <div>
       <PageHeader eyebrow="Fleet Telemetry" title="Vehicle Monitoring" description="Monitor IoT device health, speed, battery, GSM/LTE signal, and emergency state for registered vehicles." />
-      {isLoading ? (
-        <LoadingSkeleton rows={4} />
-      ) : (
+      {isLoading && <LoadingSkeleton rows={4} />}
+      {error && <ErrorState message={error} onRetry={retry} />}
+      {isEmpty && <EmptyState title="No vehicles found" message="Seed or register vehicles in the backend to populate this table." />}
+      {!isLoading && !error && !isEmpty && (
         <section className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.035]">
           <div className="hidden grid-cols-6 border-b border-white/10 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 md:grid">
             <span className="col-span-2">Vehicle</span><span>Speed</span><span>Battery</span><span>Signal</span><span>Status</span>

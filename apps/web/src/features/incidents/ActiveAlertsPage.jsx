@@ -1,19 +1,26 @@
 import AIConfidenceRing from "../../components/common/AIConfidenceRing.jsx";
 import AlertCard from "../../components/common/AlertCard.jsx";
+import EmptyState from "../../components/common/EmptyState.jsx";
 import EmergencyCountdown from "../../components/common/EmergencyCountdown.jsx";
+import ErrorState from "../../components/common/ErrorState.jsx";
 import LoadingSkeleton from "../../components/common/LoadingSkeleton.jsx";
 import PageHeader from "../../components/common/PageHeader.jsx";
 import StatusBadge from "../../components/common/StatusBadge.jsx";
 import useLiveAlerts from "../../hooks/useLiveAlerts.js";
 
 export default function ActiveAlertsPage() {
-  const { alerts, analytics, isLoading } = useLiveAlerts();
+  const { alerts, analytics, isLoading, error, isEmpty, retry } = useLiveAlerts();
 
   return (
     <div>
       <PageHeader eyebrow="Incident Control" title="Active Emergency Alerts" description="Review live accident candidates, AI severity, cancellation windows, and dispatch state." />
       <div className="grid gap-5 xl:grid-cols-[1fr_360px]">
-        <section className="space-y-4">{isLoading ? <LoadingSkeleton rows={3} /> : alerts.map((alert) => <AlertCard key={alert.id} alert={alert} />)}</section>
+        <section className="space-y-4">
+          {isLoading && <LoadingSkeleton rows={3} />}
+          {error && <ErrorState message={error} onRetry={retry} />}
+          {isEmpty && <EmptyState title="No emergency alerts" message="Create an alert in the backend to see it here." />}
+          {!isLoading && !error && alerts.map((alert) => <AlertCard key={alert.id} alert={alert} />)}
+        </section>
         <aside className="space-y-5">
           <EmergencyCountdown initialSeconds={30} />
           <AIConfidenceRing value={analytics.averageConfidence} label="Live alert confidence" size={104} />

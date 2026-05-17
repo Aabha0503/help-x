@@ -1,7 +1,9 @@
 import { Ambulance, BrainCircuit, Car, Clock3, ShieldAlert } from "lucide-react";
 import AIConfidenceRing from "../../components/common/AIConfidenceRing.jsx";
 import AlertCard from "../../components/common/AlertCard.jsx";
+import EmptyState from "../../components/common/EmptyState.jsx";
 import EmergencyCountdown from "../../components/common/EmergencyCountdown.jsx";
+import ErrorState from "../../components/common/ErrorState.jsx";
 import LoadingSkeleton from "../../components/common/LoadingSkeleton.jsx";
 import MetricCard from "../../components/common/MetricCard.jsx";
 import PageHeader from "../../components/common/PageHeader.jsx";
@@ -9,7 +11,7 @@ import StatusBadge from "../../components/common/StatusBadge.jsx";
 import useLiveAlerts from "../../hooks/useLiveAlerts.js";
 
 export default function DashboardPage() {
-  const { alerts, latestAlert, analytics, isLoading } = useLiveAlerts();
+  const { alerts, latestAlert, analytics, isLoading, error, isEmpty, retry } = useLiveAlerts();
 
   return (
     <div>
@@ -32,7 +34,10 @@ export default function DashboardPage() {
               <StatusBadge tone="critical" pulse>Live simulation</StatusBadge>
             </div>
           </div>
-          {isLoading ? <LoadingSkeleton rows={3} /> : alerts.map((alert) => <AlertCard key={alert.id} alert={alert} />)}
+          {isLoading && <LoadingSkeleton rows={3} />}
+          {error && <ErrorState message={error} onRetry={retry} />}
+          {isEmpty && <EmptyState title="No active alerts" message="MongoDB returned no emergency alerts yet." />}
+          {!isLoading && !error && alerts.map((alert) => <AlertCard key={alert.id} alert={alert} />)}
         </section>
 
         <aside className="space-y-5">
