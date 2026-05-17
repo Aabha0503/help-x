@@ -1,17 +1,24 @@
-﻿const http = require("http");
+const http = require("http");
 const app = require("./app");
 const env = require("./config/env");
 const connectDatabase = require("./config/database");
 const { initializeSocket } = require("./config/socket");
+const seedSampleData = require("./seed/sampleData");
 
 const startServer = async () => {
+  // Startup flow:
+  // 1. Load environment through config/env.
+  // 2. Connect to MongoDB Atlas through Mongoose.
+  // 3. Seed beginner-friendly sample data if the database is empty.
+  // 4. Start the Express HTTP server and attach Socket.IO.
   await connectDatabase();
+  await seedSampleData();
 
   const server = http.createServer(app);
   initializeSocket(server);
 
   server.listen(env.port, () => {
-    console.log(`Help-X backend running on port ${env.port}`);
+    console.log(`Server running on port ${env.port}`);
   });
 
   const shutdown = (signal) => {

@@ -36,6 +36,15 @@ src/
 
 ## Main API Groups
 
+- `GET /api/health`
+- `GET /api/alerts`
+- `POST /api/alerts`
+- `GET /api/alerts/:id`
+- `GET /api/vehicles`
+- `POST /api/vehicles`
+- `POST /api/incidents`
+- `GET /api/hospitals`
+- `GET /api/police-units`
 - `POST /api/v1/auth/register`
 - `POST /api/v1/auth/login`
 - `GET /api/v1/auth/me`
@@ -87,6 +96,25 @@ Clients connect to Socket.IO and may join an incident room:
 4. Socket.IO emits `incident:countdown_started`.
 5. Mobile app can call `POST /incidents/:id/cancel` within 30 seconds.
 6. If not cancelled, a countdown job dispatches hospital, police, and contact alerts.
+
+## Beginner Dashboard API Flow
+
+The dashboard-friendly routes live under `/api`:
+
+1. `server.js` loads `.env`, connects MongoDB Atlas, seeds sample data, then starts port `5000`.
+2. `app.js` applies security, CORS, JSON parsing, request logging, health checks, and route mounting.
+3. `routes/api.routes.js` maps beginner-friendly endpoints to controllers.
+4. `controllers/api.controller.js` handles HTTP request/response flow.
+5. `services/api.service.js` performs database operations through Mongoose models.
+6. Central async middleware and error handling convert thrown errors into JSON responses.
+
+## Database Flow
+
+1. `config/env.js` loads environment variables from `.env`.
+2. `config/database.js` reads `MONGODB_URI` and connects to MongoDB Atlas with Mongoose.
+3. Mongoose models in `src/models` define collection structure and indexes.
+4. Services call models for create/read operations.
+5. Controllers return consistent success responses to the frontend.
 
 ## Current Implementation Level
 
