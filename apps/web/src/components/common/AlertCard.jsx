@@ -1,4 +1,4 @@
-import { MapPin, Radio, Sensor } from "lucide-react";
+import { MapPin, Radio, Activity } from "lucide-react";
 import StatusBadge from "./StatusBadge.jsx";
 
 const toneBySeverity = {
@@ -23,7 +23,7 @@ export default function AlertCard({ alert }) {
 
       <div className="grid gap-3 text-sm text-slate-300 sm:grid-cols-3">
         <div className="flex items-center gap-2"><MapPin size={15} className="text-cyan-300" />{alert.location}</div>
-        <div className="flex items-center gap-2"><Sensor size={15} className="text-amber-300" />{alert.sensors}</div>
+        <div className="flex items-center gap-2"><Activity size={15} className="text-amber-300" />{alert.sensors}</div>
         <div className="flex items-center gap-2"><Radio size={15} className="text-emerald-300" />AI {alert.confidence}%</div>
       </div>
 
