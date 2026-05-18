@@ -13,7 +13,11 @@ app.use(helmet());
 
 // CORS allows the React dashboard to call the backend during development.
 // In production, CLIENT_ORIGIN should be the deployed dashboard URL.
-app.use(cors({ origin: env.clientOrigin, credentials: true }));
+app.use(cors({
+  origin: env.clientOrigin,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
