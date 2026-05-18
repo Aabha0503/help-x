@@ -5,7 +5,7 @@ import axios from "axios";
 // 2. Axios sends requests to the Express backend at http://localhost:5000/api.
 // 3. Response interceptors unwrap the backend's { success, data } envelope.
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://musical-space-journey-7vpxg676grgpfrgwv-5000.app.github.dev/api",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json"
