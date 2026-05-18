@@ -8,7 +8,7 @@ let io;
 const initializeSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
-      origin: env.clientOrigin,
+      origin: env.allowedOrigins,
       methods: ["GET", "POST", "PATCH"]
     }
   });

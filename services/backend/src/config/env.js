@@ -15,6 +15,10 @@ const env = {
   port: Number(process.env.PORT || 5000),
   apiVersion: process.env.API_VERSION || "v1",
   clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
+  allowedOrigins: [
+    process.env.CLIENT_ORIGIN || "http://localhost:3000",
+    "https://animated-space-fortnight-q7pxwjvjrwpvc9q49-3000.app.github.dev"
+  ],
   mongodbUri: process.env.MONGODB_URI || "mongodb://localhost:27017/helpx",
   jwtSecret: process.env.JWT_SECRET || "development_only_secret_change_me",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
